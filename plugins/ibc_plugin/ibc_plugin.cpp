@@ -683,7 +683,7 @@ void push_transactions(const std::vector<signed_transaction> &params, bool allow
 {
    try
    {
-      EOS_ASSERT(params.size() <= 1000, too_many_tx_at_once, "Attempt to push too many transactions at once");
+      snax_assert(params.size() <= 1000, too_many_tx_at_once, "Attempt to push too many transactions at once");
       auto params_copy = std::make_shared<std::vector<signed_transaction>>(params.begin(), params.end());
       push_recurse(0, params_copy, allow_failure);
    }
@@ -1400,7 +1400,7 @@ void ibc_token_contract::push_cash_trxs(const std::vector<ibc_trx_rich_info> &pa
 
    try
    {
-      EOS_ASSERT(actions.size() <= 1000, too_many_tx_at_once, "Attempt to push too many transactions at once");
+      snax_assert(actions.size() <= 1000, too_many_tx_at_once, "Attempt to push too many transactions at once");
       auto params_copy = std::make_shared<std::vector<cash_action_params>>(actions.begin(), actions.end());
       push_cash_recurse(0, params_copy, start_seq_num);
    }
@@ -1503,7 +1503,7 @@ void ibc_token_contract::push_cashconfirm_trxs(const std::vector<ibc_trx_rich_in
 
    try
    {
-      EOS_ASSERT(actions.size() <= 1000, too_many_tx_at_once, "Attempt to push too many transactions at once");
+      snax_assert(actions.size() <= 1000, too_many_tx_at_once, "Attempt to push too many transactions at once");
       auto params_copy = std::make_shared<std::vector<cashconfirm_action_params>>(actions.begin(), actions.end());
       push_cashconfirm_recurse(0, params_copy);
    }
@@ -1586,7 +1586,7 @@ void ibc_token_contract::rollback(const std::vector<transaction_id_type> trxs)
 
    try
    {
-      EOS_ASSERT(trxs.size() <= 1000, too_many_tx_at_once, "Attempt to push too many transactions at once");
+      snax_assert(trxs.size() <= 1000, too_many_tx_at_once, "Attempt to push too many transactions at once");
       auto params_copy = std::make_shared<std::vector<transaction_id_type>>(trxs.begin(), trxs.end());
       push_rborrm_recurse(0, params_copy, N(rollback));
    }
@@ -1602,7 +1602,7 @@ void ibc_token_contract::rmunablerb(const std::vector<transaction_id_type> trxs)
 
    try
    {
-      EOS_ASSERT(trxs.size() <= 1000, too_many_tx_at_once, "Attempt to push too many transactions at once");
+      snax_assert(trxs.size() <= 1000, too_many_tx_at_once, "Attempt to push too many transactions at once");
       auto params_copy = std::make_shared<std::vector<transaction_id_type>>(trxs.begin(), trxs.end());
       push_rborrm_recurse(0, params_copy, N(rmunablerb));
    }
@@ -2136,7 +2136,7 @@ void ibc_plugin_impl::start_read_message(connection_ptr conn)
                                           elog("async_read_some callback: bytes_transfered = ${bt}, buffer.bytes_to_write = ${btw}",
                                                ("bt", bytes_transferred)("btw", conn->pending_message_buffer.bytes_to_write()));
                                        }
-                                       EOS_ASSERT(bytes_transferred <= conn->pending_message_buffer.bytes_to_write(), plugin_exception, "");
+                                       snax_assert(bytes_transferred <= conn->pending_message_buffer.bytes_to_write(), plugin_exception, "");
                                        conn->pending_message_buffer.advance_write_ptr(bytes_transferred);
                                        while (conn->pending_message_buffer.bytes_to_read() > 0)
                                        {
@@ -4220,7 +4220,7 @@ T dejsonify(const string &s)
    return fc::json::from_string(s).as<T>();
 }
 
-#define OPTION_ASSERT(option) EOS_ASSERT(options.count(option) && options.at(option).as<string>() != string(), chain::plugin_config_exception, option " not specified");
+#define OPTION_ASSERT(option) snax_assert(options.count(option) && options.at(option).as<string>() != string(), chain::plugin_config_exception, option " not specified");
 
 void ibc_plugin::plugin_initialize(const variables_map &options)
 {
@@ -4249,12 +4249,12 @@ void ibc_plugin::plugin_initialize(const variables_map &options)
 
       auto get_key = [=](string key_spec_pair) -> std::pair<public_key_type, private_key_type> {
          auto delim = key_spec_pair.find("=");
-         EOS_ASSERT(delim != std::string::npos, plugin_config_exception, "Missing \"=\" in the key spec pair");
+         snax_assert(delim != std::string::npos, plugin_config_exception, "Missing \"=\" in the key spec pair");
          auto pub_key_str = key_spec_pair.substr(0, delim);
          auto spec_str = key_spec_pair.substr(delim + 1);
 
          auto spec_delim = spec_str.find(":");
-         EOS_ASSERT(spec_delim != std::string::npos, plugin_config_exception, "Missing \":\" in the key spec pair");
+         snax_assert(spec_delim != std::string::npos, plugin_config_exception, "Missing \":\" in the key spec pair");
          auto spec_type_str = spec_str.substr(0, spec_delim);
          auto spec_data = spec_str.substr(spec_delim + 1);
 
@@ -4271,7 +4271,7 @@ void ibc_plugin::plugin_initialize(const variables_map &options)
       }
       catch (...)
       {
-         EOS_ASSERT(false, chain::plugin_config_exception, "Malformed ibc-relay-private-key: \"${val}\"", ("val", key_spec_pair));
+         snax_assert(false, chain::plugin_config_exception, "Malformed ibc-relay-private-key: \"${val}\"", ("val", key_spec_pair));
       }
 
       my->connector_period = std::chrono::seconds(options.at("ibc-connection-cleanup-period").as<int>());
@@ -4339,8 +4339,8 @@ void ibc_plugin::plugin_initialize(const variables_map &options)
       }
 
       if (my->allowed_connections & ibc_plugin_impl::Specified)
-         EOS_ASSERT(options.count("ibc-peer-key"), plugin_config_exception,
-                    "At least one ibc-peer-key must accompany 'ibc-allowed-connection=specified'");
+         snax_assert(options.count("ibc-peer-key"), plugin_config_exception,
+                     "At least one ibc-peer-key must accompany 'ibc-allowed-connection=specified'");
 
       if (options.count("ibc-peer-key"))
       {
@@ -4369,7 +4369,7 @@ void ibc_plugin::plugin_initialize(const variables_map &options)
       }
 
       my->chain_plug = app().find_plugin<chain_plugin>();
-      EOS_ASSERT(my->chain_plug, chain::missing_chain_plugin_exception, "");
+      snax_assert(my->chain_plug, chain::missing_chain_plugin_exception, "");
       my->chain_id = app().get_plugin<chain_plugin>().get_chain_id();
 
       fc::rand_pseudo_bytes(my->node_id.data(), my->node_id.data_size());
