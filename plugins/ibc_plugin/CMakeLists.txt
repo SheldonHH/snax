@@ -1,4 +1,4 @@
-file(GLOB HEADERS "include/eosio/ibc_plugin/*.hpp" )
+file(GLOB HEADERS "include/snax/ibc_plugin/*.hpp" )
 add_library( ibc_plugin
              ibc_plugin.cpp
              ${HEADERS} )
