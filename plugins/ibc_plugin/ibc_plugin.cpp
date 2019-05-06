@@ -3608,7 +3608,7 @@ namespace snax { namespace ibc {
       return fc::json::from_string(s).as<T>();
    }
 
-#define OPTION_ASSERT( option ) snax_assert( options.count( option ) && options.at( option ).as<string>() != string(), chain::plugin_config_exception, option " not specified" );
+#define OPTION_ASSERT( option ) snax_assert( options.count( option ) && options.at( option ).as<string>() != string(), option " not specified" );
 
    void ibc_plugin::plugin_initialize( const variables_map& options ) {
       ilog("Initialize ibc plugin");
