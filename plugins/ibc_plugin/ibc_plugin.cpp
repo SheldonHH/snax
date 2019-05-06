@@ -3654,7 +3654,7 @@ namespace snax { namespace ibc {
             my->relay_private_key = key.second;
             ilog( "ibc relay public key is ${key}", ("key", key.first));
          } catch (...) {
-            z( false, chain::plugin_config_exception, "Malformed ibc-relay-private-key: \"${val}\"", ("val", key_spec_pair));
+            SNAX_ASSERT( false, chain::plugin_config_exception, "Malformed ibc-relay-private-key: \"${val}\"", ("val", key_spec_pair));
          }
 
          my->connector_period = std::chrono::seconds( options.at( "ibc-connection-cleanup-period" ).as<int>());
