@@ -642,7 +642,7 @@ namespace snax { namespace ibc {
 
    void push_transactions( const std::vector<signed_transaction>& params, bool allow_failure ){
       try {
-         EOS_ASSERT( params.size() <= 1000, too_many_tx_at_once, "Attempt to push too many transactions at once" );
+         SNAX_ASSERT( params.size() <= 1000, too_many_tx_at_once, "Attempt to push too many transactions at once" );
          auto params_copy = std::make_shared<std::vector<signed_transaction>>(params.begin(), params.end());
          push_recurse( 0, params_copy, allow_failure );
       } FC_LOG_AND_DROP()
@@ -1264,7 +1264,7 @@ namespace snax { namespace ibc {
       }
 
       try {
-         EOS_ASSERT( actions.size() <= 1000, too_many_tx_at_once, "Attempt to push too many transactions at once" );
+         SNAX_ASSERT( actions.size() <= 1000, too_many_tx_at_once, "Attempt to push too many transactions at once" );
          auto params_copy = std::make_shared<std::vector<cash_action_params>>(actions.begin(), actions.end());
          push_cash_recurse( 0, params_copy, start_seq_num );
       } FC_LOG_AND_DROP()
@@ -1354,7 +1354,7 @@ namespace snax { namespace ibc {
       }
 
       try {
-         EOS_ASSERT( actions.size() <= 1000, too_many_tx_at_once, "Attempt to push too many transactions at once" );
+         SNAX_ASSERT( actions.size() <= 1000, too_many_tx_at_once, "Attempt to push too many transactions at once" );
          auto params_copy = std::make_shared<std::vector<cashconfirm_action_params>>(actions.begin(), actions.end());
          push_cashconfirm_recurse( 0, params_copy );
       } FC_LOG_AND_DROP()
@@ -1436,7 +1436,7 @@ namespace snax { namespace ibc {
       }
 
       try {
-         EOS_ASSERT( trxs.size() <= 1000, too_many_tx_at_once, "Attempt to push too many transactions at once" );
+         SNAX_ASSERT( trxs.size() <= 1000, too_many_tx_at_once, "Attempt to push too many transactions at once" );
          auto params_copy = std::make_shared<std::vector<transaction_id_type>>(trxs.begin(), trxs.end());
          push_rborrm_recurse( 0, params_copy, N(rollback) );
       } FC_LOG_AND_DROP()
@@ -1448,7 +1448,7 @@ namespace snax { namespace ibc {
       }
 
       try {
-         EOS_ASSERT( trxs.size() <= 1000, too_many_tx_at_once, "Attempt to push too many transactions at once" );
+         SNAX_ASSERT( trxs.size() <= 1000, too_many_tx_at_once, "Attempt to push too many transactions at once" );
          auto params_copy = std::make_shared<std::vector<transaction_id_type>>(trxs.begin(), trxs.end());
          push_rborrm_recurse( 0, params_copy, N(rmunablerb) );
       } FC_LOG_AND_DROP()
@@ -1896,7 +1896,7 @@ namespace snax { namespace ibc {
                                              elog("async_read_some callback: bytes_transfered = ${bt}, buffer.bytes_to_write = ${btw}",
                                                   ("bt",bytes_transferred)("btw",conn->pending_message_buffer.bytes_to_write()));
                                           }
-                                          EOS_ASSERT(bytes_transferred <= conn->pending_message_buffer.bytes_to_write(), plugin_exception, "");
+                                          SNAX_ASSERT(bytes_transferred <= conn->pending_message_buffer.bytes_to_write(), plugin_exception, "");
                                           conn->pending_message_buffer.advance_write_ptr(bytes_transferred);
                                           while (conn->pending_message_buffer.bytes_to_read() > 0) {
                                              uint32_t bytes_in_buffer = conn->pending_message_buffer.bytes_to_read();
@@ -3635,12 +3635,12 @@ namespace snax { namespace ibc {
 
          auto get_key = [=]( string key_spec_pair ) -> std::pair<public_key_type,private_key_type> {
             auto delim = key_spec_pair.find("=");
-            EOS_ASSERT(delim != std::string::npos, plugin_config_exception, "Missing \"=\" in the key spec pair");
+            SNAX_ASSERT(delim != std::string::npos, plugin_config_exception, "Missing \"=\" in the key spec pair");
             auto pub_key_str = key_spec_pair.substr(0, delim);
             auto spec_str = key_spec_pair.substr(delim + 1);
 
             auto spec_delim = spec_str.find(":");
-            EOS_ASSERT(spec_delim != std::string::npos, plugin_config_exception, "Missing \":\" in the key spec pair");
+            SNAX_ASSERT(spec_delim != std::string::npos, plugin_config_exception, "Missing \":\" in the key spec pair");
             auto spec_type_str = spec_str.substr(0, spec_delim);
             auto spec_data = spec_str.substr(spec_delim + 1);
 
@@ -3712,7 +3712,7 @@ namespace snax { namespace ibc {
          }
 
          if( my->allowed_connections & ibc_plugin_impl::Specified )
-            EOS_ASSERT( options.count( "ibc-peer-key" ), plugin_config_exception,
+            SNAX_ASSERT( options.count( "ibc-peer-key" ), plugin_config_exception,
                         "At least one ibc-peer-key must accompany 'ibc-allowed-connection=specified'" );
 
          if( options.count( "ibc-peer-key" )) {
@@ -3735,7 +3735,7 @@ namespace snax { namespace ibc {
          }
 
          my->chain_plug = app().find_plugin<chain_plugin>();
-         EOS_ASSERT( my->chain_plug, chain::missing_chain_plugin_exception, "" );
+         SNAX_ASSERT( my->chain_plug, chain::missing_chain_plugin_exception, "" );
          my->chain_id = app().get_plugin<chain_plugin>().get_chain_id();
 
          fc::rand_pseudo_bytes( my->node_id.data(), my->node_id.data_size());
