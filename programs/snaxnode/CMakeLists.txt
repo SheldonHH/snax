@@ -68,7 +68,7 @@ target_link_libraries( ${NODE_EXECUTABLE_NAME}
         PRIVATE snax_chain fc ${CMAKE_DL_LIBS} ${PLATFORM_SPECIFIC_LIBS} )
 
 if(BUILD_MONGO_DB_PLUGIN)
-  target_link_libraries( ${NODE_EXECUTABLE_NAME} PRIVATE -Wl,${whole_archive_flag} mongo_db_plugin -Wl,${no_whole_archive_flag} )
+  target_link_libraries( ${NODE_EXECUTABLE_NAME} PRIVATE -Wl,${whole_archive_flag} -Wl,${no_whole_archive_flag} )
 endif()
 
 include(additionalPlugins)
